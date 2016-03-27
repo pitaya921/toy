@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>clock</title>
+</head>
+<body>
+	<canvas width="400" height="400" id="clock"></canvas>
+	<script>
+		;(function () {
+			var $ = function (id){return document.getElementById(id)};
+			function Kylin(id){
+				this.width = $(id).width
+				this.height = $(id).height
+				this.ctx = $(id).getContext('2d')
+				this.r = $(id).width/2 -10
+				var date = new Date()
+				this.sec = date.getSeconds()				
+				this.min = date.getMinutes()
+				this.hours = date.getHours() + this.min / 60
+
+				this.init()
+				this.bind()
+			}
+			Kylin.prototype =  {
+				defaults:{
+					graduateLong:10,
+					numPos:20,
+					centerRadius:4
+				},
+				init:function(){
+					var ctx = this.ctx
+
+					ctx.save()
+					ctx.translate(this.width/2,this.height/2)
+					ctx.beginPath()
+					ctx.arc(0,0,this.r,0,2*Math.PI)
+					ctx.stroke()
+					ctx.closePath()
+					
+					ctx.beginPath()
+					ctx.arc(0,0,this.defaults.centerRadius,0,2*Math.PI)
+					ctx.fill()
+					ctx.closePath()
+					
+					for(var i=0;i<2;i+=1/6){
+						var x = this.r * Math.cos((i-0.5)*Math.PI)
+						var y = this.r * Math.sin((i-0.5)*Math.PI)
+						var x1 = (this.r-this.defaults.graduateLong) * Math.cos((i-0.5)*Math.PI)
+						var y1 = (this.r-this.defaults.graduateLong) * Math.sin((i-0.5)*Math.PI)
+						var numX= (this.r-this.defaults.numPos) * Math.cos((i-0.5)*Math.PI)
+						var numY = (this.r-this.defaults.numPos) * Math.sin((i-0.5)*Math.PI)
+						ctx.textAlign="center";
+						ctx.beginPath()
+						ctx.moveTo(x1,y1)
+						ctx.lineTo(x,y)
+						ctx.fillText(Math.round(i*6)===0 ? 12 : Math.round(i*6),numX,numY)
+						ctx.stroke()
+						ctx.closePath()
+					}
+					ctx.restore()
+				},
+				hand:function(x,y){
+					var ctx = this.ctx
+					ctx.save()
+					ctx.translate(this.width/2,this.height/2)
+					ctx.beginPath()
+					ctx.moveTo(0,0)
+					ctx.lineTo(x,y)
+					ctx.stroke()
+					ctx.closePath()
+					ctx.restore()
+				},
+				hourHand:function(){
+					//this.hours += this.min / 60
+					var x = 60 * Math.cos((this.hours/6-0.5)*Math.PI)
+					var y = 60 * Math.sin((this.hours/6-0.5)*Math.PI)
+					this.hand(x,y)
+				},
+				minuteHand:function(){
+					var x = 120 * Math.cos((this.min/30-0.5)*Math.PI)
+					var y = 120 * Math.sin((this.min/30-0.5)*Math.PI)
+					this.hand(x,y)
+				},
+				secondHand:function(){
+					var x = 160 * Math.cos((this.sec/30-0.5)*Math.PI)
+					var y = 160 * Math.sin((this.sec/30-0.5)*Math.PI)
+					var ctx = this.ctx
+					ctx.save()
+					ctx.translate(this.width/2,this.height/2)
+					ctx.beginPath()
+					ctx.arc(x,y,5,0,2*Math.PI)
+					ctx.fill()
+					ctx.closePath()
+					ctx.restore()
+				},
+				bind:function () {
+					var that = this
+					
+					setTimeout(function(){
+						that.ctx.clearRect(0,0,that.width,that.height)
+						that.init()
+						that.sec += 1
+						
+						if(that.sec === 60){
+							that.sec = 0
+							that.min += 1
+							that.hours += 1 / 60
+						} 
+						if(that.min === 60){
+							that.min = 0
+						}
+
+						that.secondHand()
+						that.minuteHand()
+						that.hourHand()
+						that.bind()
+					},1000)
+				}
+			}
+
+			new Kylin('clock')
+		})()
+	</script>
+</body>
+</html>
