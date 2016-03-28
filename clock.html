@@ -90,6 +90,7 @@
 					ctx.translate(this.width/2,this.height/2)
 					ctx.beginPath()
 					ctx.arc(x,y,5,0,2*Math.PI)
+					ctx.fillStyle = '#'+('00000'+(Math.random()*0x1000000<<0).toString(16)).slice(-6)
 					ctx.fill()
 					ctx.closePath()
 					ctx.restore()
