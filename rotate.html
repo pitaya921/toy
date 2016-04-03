@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500">
+		<g id="sun">
+			<circle cx="250" cy="250" r="80" stroke="black" stroke-width="2" fill="red"/>
+			<text x="250" y="250" text-anchor="middle" dominant-baseline="middle">Sun</text>
+		</g>
+		<g id="earth">
+			<circle cx="250" cy="250" r="40" stroke="black" stroke-width="2" fill="none"/>
+			<text x="250" y="250" text-anchor="middle" dominant-baseline="middle">Earth</text>
+		</g>
+		<g id="moon">
+			<circle cx="250" cy="250" r="20" stroke="black" stroke-width="2" fill="none"/>
+			<text x="250" y="250" text-anchor="middle" dominant-baseline="middle">Moon</text>
+		</g>
+	</svg>
+	<script>
+		;(function () {
+			var $ = function(id){return document.getElementById(id)};
+
+			var xposXY = 250,yposXY = 250,zposXY = 50 ,flXY = 1200,fl = 2400
+			var earth = $('earth').querySelector('circle')
+			var moon = $('moon').querySelector('circle')
+			var earthText = $('earth').querySelector('text')
+			var moonText = $('moon').querySelector('text')
+			var sinXY = Math.sin(0.01*Math.PI)
+			var cosXY = Math.cos(0.01*Math.PI)
+			function rotateXY(){
+				var x1 = xposXY*cosXY - zposXY*sinXY
+				var y1 = yposXY*cosXY - zposXY*sinXY
+				var z1 = zposXY*cosXY + yposXY*sinXY
+				
+				xposXY = x1
+				yposXY = y1
+				zposXY = z1
+				var scale = flXY / (flXY + z1)
+				var scale1 = fl / (fl + z1)
+				
+				earth.setAttribute('cy',250*scale)
+				earth.setAttribute('cx',250 + xposXY*scale)
+				earthText.setAttribute('y',250*scale)
+				earthText.setAttribute('x',250 + xposXY*scale)
+				earth.setAttribute('r',40*scale)
+				
+				moon.setAttribute('cy',(250*scale) + yposXY*scale1 * 0.2)
+				moon.setAttribute('cx',(250 + xposXY*scale) + xposXY*scale1 * 0.2)
+				moonText.setAttribute('y',(250*scale) + yposXY*scale1 * 0.2)
+				moonText.setAttribute('x',(250 + xposXY*scale) + xposXY*scale1 * 0.2)
+				moon.setAttribute('r',20*scale1)
+				
+				requestAnimationFrame(rotateXY)
+			}
+			requestAnimationFrame(rotateXY)
+		})()
+	</script>
+</body>
+</html>
