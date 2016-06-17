@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<style type="text/css">
+			.icons{
+				display: inline-block;
+				width: 4em;
+				height: 4em;
+				fill: none;
+				stroke: #426;
+				vertical-align: -2px;
+				margin-right: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<svg style="position: absolute; width: 0; height: 0;" width="0" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			<symbol id="icon" viewBox="0 0 32 32">
+				<title>command</title>
+				<g transform="scale(0.03125, 0.03125)"><path fill="url(#linear)" d="M670.208 336.969143 1024 391.021714 768.073143 653.312 828.562286 1023.853714 512.073143 848.969143 195.657143 1024 256 653.458286 0 391.094857 353.718857 337.042286 511.926857 0 670.208 336.969143Z"></path></g>
+			</symbol>
+			<symbol id="Hollow" viewBox="0 0 32 32">
+				<title>Hollow</title>
+				<g transform="scale(0.03125, 0.03125)"><path d="M670.208 336.969143 1024 391.021714 768.073143 653.312 828.562286 1023.853714 512.073143 848.969143 195.657143 1024 256 653.458286 0 391.094857 353.718857 337.042286 511.926857 0 670.208 336.969143Z"></path></g>
+			</symbol>
+			<symbol id="solid" viewBox="0 0 32 32">
+				<title>solid</title>
+				<g transform="scale(0.03125, 0.03125)"><path fill="#426" d="M670.208 336.969143 1024 391.021714 768.073143 653.312 828.562286 1023.853714 512.073143 848.969143 195.657143 1024 256 653.458286 0 391.094857 353.718857 337.042286 511.926857 0 670.208 336.969143Z"></path></g>
+			</symbol>
+			<defs>
+				<linearGradient id="linear" x1="0%" y1="0%" x2="50%" y2="0%">
+					<stop offset="0%"   stop-color="#426" stop-opacity="1"/>
+
+					<stop offset="100%" stop-color="#fff" stop-opacity="1" />
+				</linearGradient>
+			</defs>
+		</svg>
+		<div id="start">
+			<svg class="icons"><use xlink:href="#Hollow"></use></svg>
+			<svg class="icons"><use xlink:href="#Hollow"></use></svg>
+			<svg class="icons"><use xlink:href="#Hollow"></use></svg>
+			<svg class="icons"><use xlink:href="#Hollow"></use></svg>
+			<svg class="icons"><use xlink:href="#Hollow"></use></svg>
+		</div>
+		<script src="./zepto.js"></script>
+		<script>
+			;(function(){
+				$('#start').on('click','.icons',function(e){
+					var i = 0,
+						target = e.currentTarget,
+						icons = [].slice.call(document.querySelectorAll('.icons')),
+						index = icons.indexOf(target),
+						len = icons.length,
+						useElement
+
+					for(i;i<len;i++){
+						useElement = icons[i].children[0]
+						if(i<index){
+							if(getXlink(useElement,'xlink:href')==='#solid') continue
+							setXlink(useElement,'xlink:href','#solid')
+						}else if(i===index){
+							e.offsetX < (target.offsetWidth/2) ? setXlink(useElement,'xlink:href','#icon'):setXlink(useElement,'xlink:href','#solid')
+						}else{
+							if(getXlink(useElement,'xlink:href')==='#Hollow') break
+							setXlink(useElement,'xlink:href','#Hollow')
+						}
+					}
+					function getXlink(el,attr){
+						return el.getAttribute(attr)
+					}
+					function setXlink(el,attr,val){
+						el.setAttribute(attr,val)
+					}
+				})
+			})()
+		</script>
+	</body>
+</html>
